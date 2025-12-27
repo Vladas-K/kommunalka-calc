@@ -1,40 +1,50 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Kommunalka Calc — история</title>
-</head>
-<body>
-    <h1>История платежей</h1>
+{% extends "base.html" %}
 
-    <p><a href="{% url 'calculate' %}">Назад к расчёту</a></p>
+{% block title %}История — Kommunalka Calc{% endblock %}
 
-    <table border="1" cellpadding="5">
-        <tr>
-            <th>Дата</th>
-            <th>Холодная вода</th>
-            <th>Горячая вода</th>
-            <th>Водоотведение</th>
-            <th>Электричество</th>
-            <th>Интернет</th>
-            <th>Итого</th>
-        </tr>
+{% block content %}
+<h1 class="mb-4 text-center">История платежей</h1>
 
-        {% for r in records %}
-        <tr>
-            <td>{{ r.created_at|date:"Y-m-d H:i" }}</td>
-            <td>{{ r.cold_cost }}</td>
-            <td>{{ r.hot_cost }}</td>
-            <td>{{ r.sewage_cost }}</td>
-            <td>{{ r.electricity }}</td>
-            <td>{{ r.internet }}</td>
-            <td><b>{{ r.total }}</b></td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="7">Пока нет сохранённых платежей.</td>
-        </tr>
-        {% endfor %}
-    </table>
-</body>
-</html>
+<div class="text-center mb-4">
+    <a href="{% url 'calculate' %}" class="btn btn-outline-primary btn-sm">
+        Назад к расчёту
+    </a>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <table class="table table-striped table-hover mb-0">
+            <thead class="table-dark">
+                <tr>
+                    <th>Дата</th>
+                    <th>Холодная</th>
+                    <th>Горячая</th>
+                    <th>Водоотведение</th>
+                    <th>Электричество</th>
+                    <th>Интернет</th>
+                    <th>Итого</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in records %}
+                <tr>
+                    <td>{{ r.created_at|date:"Y-m-d H:i" }}</td>
+                    <td>{{ r.cold_cost }}</td>
+                    <td>{{ r.hot_cost }}</td>
+                    <td>{{ r.sewage_cost }}</td>
+                    <td>{{ r.electricity }}</td>
+                    <td>{{ r.internet }}</td>
+                    <td><b>{{ r.total }}</b></td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center py-3">
+                        Пока нет сохранённых платежей.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
