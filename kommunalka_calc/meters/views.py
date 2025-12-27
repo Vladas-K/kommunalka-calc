@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from .forms import MeterForm
 from .models import MeterReading
+from .forms import MeterForm
 
 TARIFF_COLD = 65.77
 TARIFF_HOT = 322.5
@@ -12,43 +12,32 @@ def calculate(request):
     if request.method == "POST":
         form = MeterForm(request.POST)
         if form.is_valid():
-            cold_prev = form.cleaned_data["cold_prev"]
-            cold_curr = form.cleaned_data["cold_curr"]
-            hot_prev = form.cleaned_data["hot_prev"]
-            hot_curr = form.cleaned_data["hot_curr"]
-            electricity = form.cleaned_data.get("electricity") or 0
-            internet = form.cleaned_data.get("internet") or 0
+            obj = form.save(commit=False)
 
-            cold_used = cold_curr - cold_prev
-            hot_used = hot_curr - hot_prev
+            cold_used = obj.cold_curr - obj.cold_prev
+            hot_used = obj.hot_curr - obj.hot_prev
             sewage_used = cold_used + hot_used
 
-            cold_cost = cold_used * TARIFF_COLD
-            hot_cost = hot_used * TARIFF_HOT
-            sewage_cost = sewage_used * TARIFF_SEWAGE
-
-            total = cold_cost + hot_cost + sewage_cost + electricity + internet
-
-            MeterReading.objects.create(
-                cold_prev=cold_prev,
-                cold_curr=cold_curr,
-                hot_prev=hot_prev,
-                hot_curr=hot_curr,
-                electricity=electricity,
-                internet=internet,
-                cold_cost=cold_cost,
-                hot_cost=hot_cost,
-                sewage_cost=sewage_cost,
-                total=total,
+            obj.cold_cost = cold_used * TARIFF_COLD
+            obj.hot_cost = hot_used * TARIFF_HOT
+            obj.sewage_cost = sewage_used * TARIFF_SEWAGE
+            obj.total = (
+                obj.cold_cost +
+                obj.hot_cost +
+                obj.sewage_cost +
+                obj.electricity +
+                obj.internet
             )
 
+            obj.save()
+
             result = {
-                "cold_cost": round(cold_cost, 2),
-                "hot_cost": round(hot_cost, 2),
-                "sewage_cost": round(sewage_cost, 2),
-                "electricity": electricity,
-                "internet": internet,
-                "total": round(total, 2),
+                "cold_cost": round(obj.cold_cost, 2),
+                "hot_cost": round(obj.hot_cost, 2),
+                "sewage_cost": round(obj.sewage_cost, 2),
+                "electricity": obj.electricity,
+                "internet": obj.internet,
+                "total": round(obj.total, 2),
             }
     else:
         form = MeterForm()
