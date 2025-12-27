@@ -45,7 +45,6 @@ def calculate(request):
             form = MeterForm(initial={
                 "cold_prev": last.cold_curr,
                 "hot_prev": last.hot_curr,
-                "electricity": last.electricity,
                 "internet": last.internet,
             })
         else:
