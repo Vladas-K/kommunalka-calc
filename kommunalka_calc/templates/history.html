@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Kommunalka Calc — история</title>
+</head>
+<body>
+    <h1>История платежей</h1>
+
+    <p><a href="{% url 'calculate' %}">Назад к расчёту</a></p>
+
+    <table border="1" cellpadding="5">
+        <tr>
+            <th>Дата</th>
+            <th>Холодная вода</th>
+            <th>Горячая вода</th>
+            <th>Водоотведение</th>
+            <th>Электричество</th>
+            <th>Интернет</th>
+            <th>Итого</th>
+        </tr>
+
+        {% for r in records %}
+        <tr>
+            <td>{{ r.created_at|date:"Y-m-d H:i" }}</td>
+            <td>{{ r.cold_cost }}</td>
+            <td>{{ r.hot_cost }}</td>
+            <td>{{ r.sewage_cost }}</td>
+            <td>{{ r.electricity }}</td>
+            <td>{{ r.internet }}</td>
+            <td><b>{{ r.total }}</b></td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="7">Пока нет сохранённых платежей.</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Kommunalka Calc — расчёт</title>
+</head>
+<body>
+    <h1>Расчёт коммунальных платежей</h1>
+
+    <p><a href="{% url 'history' %}">История платежей</a></p>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Рассчитать</button>
+    </form>
+
+    {% if result %}
+        <hr>
+        <h2>Итог:</h2>
+        <p>Холодная вода: {{ result.cold_cost }} ₽</p>
+        <p>Горячая вода: {{ result.hot_cost }} ₽</p>
+        <p>Водоотведение: {{ result.sewage_cost }} ₽</p>
+        <p>Электричество: {{ result.electricity }} ₽</p>
+        <p>Интернет: {{ result.internet }} ₽</p>
+        <h3>Итого: {{ result.total }} ₽</h3>
+    {% endif %}
+</body>
+</html>
