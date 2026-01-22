@@ -28,7 +28,7 @@
             <tbody>
                 {% for r in records %}
                 <tr>
-                    <td>{{ r.created_at|date:"Y-m-d H:i" }}</td>
+                    <td>{{ r.created_at|date:"d" }} {{ r.created_at|date:"F"|lower }} {{ r.created_at|date:"Y H:i" }}</td>
                     <td>{{ r.cold_cost }}</td>
                     <td>{{ r.hot_cost }}</td>
                     <td>{{ r.sewage_cost }}</td>
