@@ -26,6 +26,6 @@
 ## 📦 Установка
 
 ```bash
-git clone <https://github.com/Vladas-K/kommunalka-calc.git>
+git clone https://github.com/Vladas-K/kommunalka-calc.git
 cd kommunalka-calc
 pip install -r requirements.txt
