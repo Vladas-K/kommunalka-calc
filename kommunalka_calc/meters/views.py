@@ -6,12 +6,13 @@ TARIFF_COLD = 65.77
 TARIFF_HOT = 322.5
 TARIFF_SEWAGE = 51.62
 
+
 def calculate(request):
-    # Получаем последнюю запись
     last = MeterReading.objects.order_by('-created_at').first()
 
     if request.method == "POST":
         form = MeterForm(request.POST)
+
         if form.is_valid():
             obj = form.save(commit=False)
 
@@ -31,37 +32,38 @@ def calculate(request):
             )
 
             obj.save()
-
-            # Сохраняем ID результата в сессии
             request.session["last_result_id"] = obj.id
 
-            # ВАЖНО: redirect вместо render
-            return redirect("calculate")
+            return redirect("meters:calculate")
 
-    else:
-        form = MeterForm(initial={
-            "cold_prev": last.cold_curr if last else "",
-            "hot_prev": last.hot_curr if last else "",
-            "electricity": last.electricity if last else "",
-            "internet": last.internet if last else "",
+        # ❗ Если форма НЕвалидна — возвращаем шаблон с ошибками
+        return render(request, "calc.html", {
+            "form": form,
+            "result": None,
         })
 
-        # Если есть результат в сессии — показываем его
-        result = None
-        result_id = request.session.pop("last_result_id", None)
-        if result_id:
-            obj = MeterReading.objects.get(id=result_id)
-            result = {
-                "cold_cost": round(obj.cold_cost, 2),
-                "hot_cost": round(obj.hot_cost, 2),
-                "sewage_cost": round(obj.sewage_cost, 2),
-                "electricity": obj.electricity,
-                "internet": obj.internet,
-                "total": round(obj.total, 2),
-            }
+    # GET-запрос
+    form = MeterForm(initial={
+        "cold_prev": last.cold_curr if last else "",
+        "hot_prev": last.hot_curr if last else "",
+        "electricity": last.electricity if last else "",
+        "internet": last.internet if last else "",
+    })
 
-        return render(request, "calc.html", {"form": form, "result": result})
+    result = None
+    result_id = request.session.pop("last_result_id", None)
+    if result_id:
+        obj = MeterReading.objects.get(id=result_id)
+        result = {
+            "cold_cost": round(obj.cold_cost, 2),
+            "hot_cost": round(obj.hot_cost, 2),
+            "sewage_cost": round(obj.sewage_cost, 2),
+            "electricity": obj.electricity,
+            "internet": obj.internet,
+            "total": round(obj.total, 2),
+        }
 
+    return render(request, "calc.html", {"form": form, "result": result})
 
 
 def history(request):
