@@ -29,11 +29,7 @@ def test_calculate_valid_post_creates_record(client):
     assert obj.hot_cost == (10 - 5) * TARIFF_HOT
     assert obj.sewage_cost == ((20 - 10) + (10 - 5)) * TARIFF_SEWAGE
     assert obj.total == (
-        obj.cold_cost +
-        obj.hot_cost +
-        obj.sewage_cost +
-        obj.electricity +
-        obj.internet
+        obj.cold_cost + obj.hot_cost + obj.sewage_cost + obj.electricity + obj.internet
     )
 
 
@@ -53,11 +49,16 @@ def test_calculate_invalid_post_returns_errors(client):
 def test_calculate_get_initial_values(client):
     # Создаём предыдущую запись
     last = MeterReading.objects.create(
-        cold_prev=0, cold_curr=10,
-        hot_prev=0, hot_curr=5,
+        cold_prev=0,
+        cold_curr=10,
+        hot_prev=0,
+        hot_curr=5,
         electricity=100,
         internet=500,
-        cold_cost=0, hot_cost=0, sewage_cost=0, total=0
+        cold_cost=0,
+        hot_cost=0,
+        sewage_cost=0,
+        total=0,
     )
 
     url = reverse("meters:calculate")
@@ -87,8 +88,10 @@ def test_calculate_get_without_previous_records(client):
 @pytest.mark.django_db
 def test_calculate_result_displayed_after_redirect(client):
     obj = MeterReading.objects.create(
-        cold_prev=0, cold_curr=10,
-        hot_prev=0, hot_curr=5,
+        cold_prev=0,
+        cold_curr=10,
+        hot_prev=0,
+        hot_curr=5,
         electricity=100,
         internet=500,
         cold_cost=100,

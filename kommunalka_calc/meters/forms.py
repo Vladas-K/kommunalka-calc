@@ -1,6 +1,7 @@
 from django import forms
 from .models import MeterReading
 
+
 class MeterForm(forms.ModelForm):
     class Meta:
         model = MeterReading

@@ -4,13 +4,13 @@ import pytest
 
 
 def test_home_availability_for_anonymous_user(client, db):
-    url = reverse('meters:calculate')
+    url = reverse("meters:calculate")
     response = client.get(url)
     assert response.status_code == HTTPStatus.OK
 
 
 def test_history_page_availability_for_anonymous_user(client, db):
-    url = reverse('meters:history')
+    url = reverse("meters:history")
     response = client.get(url)
     assert response.status_code == HTTPStatus.OK
 
@@ -20,7 +20,7 @@ def test_calculate_post_request(client, db):
     Проверяем, что POST-запрос на страницу расчёта
     не падает и возвращает корректный статус.
     """
-    url = reverse('meters:calculate')
+    url = reverse("meters:calculate")
     data = {
         "cold_water": 10,
         "hot_water": 5,
@@ -35,7 +35,7 @@ def test_calculate_post_request(client, db):
     [
         "meters:calculate",
         "meters:history",
-    ]
+    ],
 )
 def test_routes_exist(client, db, route_name):
     """
