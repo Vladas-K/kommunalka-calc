@@ -26,7 +26,7 @@ services:
     build: ./kommunalka_calc/
     env_file: .env
     volumes:
-      - static:/payment_static
+      - static:/app/collected_static
     # Какие контейнеры нужно запустить до старта этого контейнера:
     depends_on:
       - db
