@@ -21,7 +21,7 @@
 
 - **Python 3**
 - **Django**
-- **SQLite** (по умолчанию)
+- **PostgreSQL**
 - **Bootstrap 5**
 
 ## 📦 Установка
